@@ -43,6 +43,12 @@ android {
         }
     }
 
+    packaging {
+        resources {
+            excludes += listOf("META-INF/INDEX.LIST", "META-INF/io.netty.versions.properties")
+        }
+    }
+
     kotlinOptions {
         jvmTarget = "11"
     }

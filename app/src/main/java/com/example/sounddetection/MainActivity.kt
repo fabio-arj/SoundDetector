@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
+import com.example.sounddetection.publisher.SensorPublisher
 import com.example.sounddetection.recorder.AudioRecorder
 import com.example.sounddetection.ui.theme.SoundDetectionTheme
 import kotlinx.coroutines.delay
@@ -22,6 +23,7 @@ import java.io.File
 class MainActivity : ComponentActivity() {
 
     private val recorder by lazy { AudioRecorder(applicationContext) }
+    private val publisher by lazy { SensorPublisher() }
 
     private var startRecordingCallback: (() -> Unit)? = null
 
@@ -45,9 +47,14 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(isRecording) {
                 while (isRecording) {
                     dB = recorder.getDB()
-                    delay(100)
+
+                    val json = """{"ruido": $dB}"""
+                    publisher.publishSensor(json)
+
+                    delay(500) // 5 segundos
                 }
             }
+
 
             SoundDetectionTheme {
                 Column(
